@@ -1,4 +1,4 @@
-#Mini Compiler - Complete Implementation
+# Mini Compiler - Complete Implementation
 A full-featured compiler implementation with all six classical phases, built from scratch without parser generators.
 
 📋 Features

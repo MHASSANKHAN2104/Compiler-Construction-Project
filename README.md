@@ -1,75 +1,59 @@
-# **Mini Compiler – Complete Implementation**
+# Mini Compiler - Complete Implementation
 
-A full-featured educational compiler implementation that demonstrates **all six classical phases of compilation**, built entirely from scratch **without parser generators**.
-Ideal for academic projects, compiler design courses, and anyone learning how compilers work internally.
+A full-featured compiler implementation with all six classical phases, built from scratch without parser generators.
 
+## 📋 Features
 
-## 📋 **Features**
+### Supported Language Constructs
+- **Data Types**: `int`, `float`, `char`
+- **Control Flow**: `if`, `elif`, `else`
+- **Loops**: `while`, `for`
+- **Functions**: Function declarations, recursion, parameter passing, return values
+- **I/O**: `print`, `input`
+- **Operators**: Arithmetic (`+`, `-`, `*`, `/`, `%`), Relational (`==`, `!=`, `<`, `>`, `<=`, `>=`), Logical (`&&`, `||`, `!`)
+- **Nested Structures**: Full support for nested blocks and scopes
 
-### **Supported Language Constructs**
+### Compiler Phases
 
-* **Data Types:** `int`, `float`, `char`
-* **Control Flow:** `if`, `elif`, `else`
-* **Loops:** `while`, `for`
-* **Functions:** declarations, recursion, parameter passing, return values
-* **I/O:** `print`, `input`
-* **Operators:**
+#### Phase 1: Lexical Analysis
+- Character-by-character tokenization
+- Keyword recognition
+- Number parsing (int and float)
+- Char literal handling
+- Comment support (`//`)
+- Comprehensive error detection
 
-  * Arithmetic: `+`, `-`, `*`, `/`, `%`
-  * Relational: `==`, `!=`, `<`, `>`, `<=`, `>=`
-  * Logical: `&&`, `||`, `!`
-* **Nested Structures:** full support for nested blocks and scopes
+#### Phase 2: Syntax Analysis (Parsing)
+- **Recursive Descent Parser** (Top-Down)
+- Builds Abstract Syntax Tree (AST)
+- Error recovery mechanism
+- Grammar-driven implementation
 
+#### Phase 3: Semantic Analysis
+- Type checking with coercion rules
+- Scope management (stack-based)
+- Declaration-before-use validation
+- Symbol table construction
+- Initialization tracking
 
-## 🛠️ **Compiler Phases**
+#### Phase 4: Intermediate Code Generation
+- Three-Address Code (TAC) generation
+- Label management for control flow
+- Temporary variable allocation
 
-### **Phase 1: Lexical Analysis**
+#### Phase 5: Optimization
+- Constant folding (`3 + 5` → `8`)
+- Algebraic simplification (`x * 1` → `x`, `x + 0` → `x`)
+- Dead code elimination
 
-* Character-by-character tokenization
-* Keyword recognition
-* Number parsing (int & float)
-* Char literal handling
-* Comment support (`//`)
-* Robust error detection
+#### Phase 6: Code Generation
+- Pseudo-assembly output
+- Stack-based architecture
+- Data and text sections
 
-### **Phase 2: Syntax Analysis (Parsing)**
+## 🚀 Usage
 
-* Recursive descent parser (top-down)
-* Abstract Syntax Tree (AST) creation
-* Grammar-driven parsing
-* Error recovery mechanisms
-
-### **Phase 3: Semantic Analysis**
-
-* Type checking with coercion
-* Stack-based scope management
-* Declaration-before-use validation
-* Symbol table construction
-* Initialization tracking
-
-### **Phase 4: Intermediate Code Generation**
-
-* Three-Address Code (TAC) output
-* Label & jump management
-* Temporary variable allocation
-
-### **Phase 5: Optimization**
-
-* Constant folding (`3 + 5 → 8`)
-* Algebraic simplification (`x * 1 → x`)
-* Dead code elimination
-
-### **Phase 6: Code Generation**
-
-* Pseudo-assembly generation
-* Stack-based architecture
-* Organized text & data sections
-
----
-
-## 🚀 **Usage**
-
-### **Command-Line**
+### Command Line
 
 ```bash
 # Compile a source file
@@ -79,7 +63,7 @@ python compiler.py test_program1.txt
 python compiler.py --interactive
 ```
 
-### **Programmatic Usage**
+### Programmatic Usage
 
 ```python
 from compiler import Compiler
@@ -92,9 +76,7 @@ if success:
     result['symbol_table'].print_table()
 ```
 
----
-
-## 📁 **Project Structure**
+## 📁 Project Structure
 
 ```
 mini-compiler/
@@ -108,49 +90,39 @@ mini-compiler/
 ├── optimizer.py             # Phase 5: Code Optimizer
 ├── code_generator.py        # Phase 6: Final Code Generator
 ├── error_handler.py         # Centralized error handling
-├── compiler.py              # Main compiler controller
+├── compiler.py              # Main compiler orchestrator
 ├── test_program1.txt        # Test: Basic arithmetic
 ├── test_program2.txt        # Test: If-elif-else
 ├── test_program3.txt        # Test: Loops
 ├── test_program4.txt        # Test: Nested structures
 ├── test_errors.txt          # Test: Error detection
-└── README.md
+└── README.md                # This file
 ```
 
----
+## 📖 Grammar
 
-## 📖 **Grammar**
+See `grammar.txt` for the complete formal grammar specification in BNF notation.
 
-The full grammar specification (BNF format) is available in **grammar.txt**.
+### Type Coercion Rules
 
----
+1. `int + int` → `int`
+2. `float + float` → `float`
+3. `int + float` → `float` (int promoted to float)
+4. `char` in arithmetic → promoted to `int`
+5. Assignment: `int = float` → **ERROR** (narrowing not allowed)
+6. Assignment: `float = int` → **OK** (widening allowed)
 
-## 🔢 **Type Coercion Rules**
+## 🧪 Test Programs
 
-| Expression         | Result                |
-| ------------------ | --------------------- |
-| int + int          | int                   |
-| float + float      | float                 |
-| int + float        | float (int promoted)  |
-| char in arithmetic | promoted to int       |
-| int = float        | ❌ Error (narrowing)   |
-| float = int        | ✔️ Allowed (widening) |
-
----
-
-## 🧪 **Test Programs**
-
-### **Test 1: Basic Arithmetic**
-
-```c
+### Test 1: Basic Arithmetic
+```
 int x;
 x = 10 + 5 * 2;
 print x;
 ```
 
-### **Test 2: Control Flow**
-
-```c
+### Test 2: Control Flow
+```
 int score;
 score = 85;
 
@@ -163,9 +135,8 @@ if (score >= 90) {
 }
 ```
 
-### **Test 3: Loops (Modern Syntax)**
-
-```c
+### Test 3: Loops (Modern Syntax)
+```rust
 int sum;
 sum = 0;
 
@@ -175,9 +146,8 @@ loop from i = 1 to 10 {
 print sum;
 ```
 
-### **Test 4: Functions (NEW!)**
-
-```c
+### Test 4: Functions (NEW!)
+```
 func int factorial(int n) {
     if (n <= 1) {
         return 1;
@@ -192,82 +162,65 @@ result = factorial(5);
 print result;  // Output: 120
 ```
 
----
+## 🔍 Error Handling
 
-## 🔍 **Error Handling**
+The compiler detects three types of errors:
 
-The compiler identifies:
+### 1. Lexical Errors
+- Unknown characters
+- Malformed literals
+- Invalid tokens
 
-### **1. Lexical Errors**
+### 2. Syntax Errors
+- Missing semicolons
+- Unmatched braces
+- Invalid token sequences
 
-* Unknown characters
-* Malformed literals
-* Invalid tokens
+### 3. Semantic Errors
+- Undeclared variables
+- Type mismatches
+- Use before initialization
+- Redeclaration in same scope
 
-### **2. Syntax Errors**
+## 📊 Output Files
 
-* Missing semicolons
-* Unmatched braces
-* Invalid sequences
+When compiling a file `program.txt`, the compiler generates:
 
-### **3. Semantic Errors**
+- `program.tac` - Three-Address Code
+- `program_opt.tac` - Optimized TAC
+- `program.asm` - Final assembly code
 
-* Undeclared variables
-* Type mismatches
-* Use-before-initialization
-* Redeclaration in the same scope
+## 🎓 Educational Value
 
----
+This compiler is designed for:
+- Compiler design courses
+- Understanding compilation phases
+- Learning parser implementation
+- Studying optimization techniques
+- Semester projects and viva preparation
 
-## 📊 **Generated Output Files**
+## 🛠️ Implementation Details
 
-Given a file like `program.txt`, the compiler generates:
+### Parser Choice: Recursive Descent (Top-Down)
 
-* `program.tac` — Three-Address Code
-* `program_opt.tac` — Optimized TAC
-* `program.asm` — Final assembly
+**Why not Bottom-Up (LR/LALR)?**
+- Easier to implement manually
+- No need for complex table generation
+- Better error messages
+- More intuitive for small languages
+- Suitable for academic projects
 
----
+### Symbol Table: Stack-Based Scopes
 
-## 🎓 **Educational Value**
-
-This project helps learners understand:
-
-* Full compiler architecture
-* Lexing, parsing, semantic analysis
-* AST design
-* Intermediate code generation
-* Optimization techniques
-* Code generation for stack machines
-
-Perfect for **semester projects, viva preparation, and demonstrations**.
-
----
-
-## 🛠️ **Implementation Details**
-
-### **Parser Choice: Recursive Descent**
-
-Reasons:
-
-* Easier manual implementation
-* Better error messages
-* Intuitive for small languages
-* No complex table generation
-* Ideal for teaching
-
-### **Symbol Table Structure**
-
-Stack-based nested scopes:
-
-```txt
+Each scope is a dictionary on a stack:
+```python
 scopes = [
-    {'x': SymbolEntry(...)},  # Global
-    {'y': SymbolEntry(...)},  # Inner scope
+    {'x': SymbolEntry(...)},  # Global scope
+    {'y': SymbolEntry(...)},  # Block scope
 ]
 ```
 
-### **Three-Address Code Format**
+### Three-Address Code Format
 
 ```
 t0 = a + b
@@ -277,26 +230,22 @@ IF_FALSE t2 GOTO L1
 L1:
 ```
 
-### **Example Compilation**
+## 📝 Example Compilation
 
-#### **Input**
-
-```c
+**Input:**
+```
 int x;
 x = 5 + 3;
 print x;
 ```
 
-#### **Tokens**
-
+**Tokens:**
 ```
-INT, IDENTIFIER(x), SEMICOLON,
-IDENTIFIER(x), ASSIGN,
+INT, IDENTIFIER(x), SEMICOLON, IDENTIFIER(x), ASSIGN, 
 INTEGER_LITERAL(5), PLUS, INTEGER_LITERAL(3), SEMICOLON, ...
 ```
 
-#### **TAC**
-
+**TAC:**
 ```
 ALLOC x int
 t0 = 5 + 3
@@ -304,48 +253,38 @@ x = t0
 PRINT x
 ```
 
-#### **Optimized TAC**
-
+**Optimized TAC:**
 ```
 ALLOC x int
 x = 8
 PRINT x
 ```
 
-#### **Assembly**
-
+**Assembly:**
 ```
 x: .space 4  ; int
-LOAD_IMM 8
-STORE x
-LOAD x
-PRINT
+    LOAD_IMM 8
+    STORE x
+    LOAD x
+    PRINT
 ```
 
----
+## 🤝 Contributing
 
-## 🤝 **Contributing**
+This is an educational project. Feel free to:
+- Add more optimizations
+- Extend the language features
+- Improve error messages
+- Add more test cases
 
-This project welcomes improvements to:
+## 📄 License
 
-* Optimizations
-* Language features
-* Error diagnostics
-* Test suite
+Free to use for educational purposes.
 
----
+## 👨‍💻 Author
 
-## 📄 **License**
-
-Free to use for educational and academic purposes.
-
----
-
-## 👨‍💻 **Author**
-
-Developed as a complete semester project demonstrating **all phases of compilation**.
+Built as a complete semester project demonstrating all phases of compilation.
 
 ---
 
 **Happy Compiling! 🎉**
-

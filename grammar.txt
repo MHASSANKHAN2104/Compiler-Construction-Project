@@ -1,0 +1,274 @@
+================================================================================
+MINI COMPILER - FORMAL GRAMMAR SPECIFICATION (WITH FUNCTIONS)
+================================================================================
+
+LEXICAL TOKENS:
+--------------
+Keywords: int, float, char, void, if, elif, else, loop, from, to, step, show, tell, return, func
+Operators: +, -, *, /, %, =, ==, !=, <, >, <=, >=, &&, ||, !
+Delimiters: (, ), {, }, ;, ,
+Literals: INTEGER_LITERAL, FLOAT_LITERAL, CHAR_LITERAL
+Identifiers: [a-zA-Z_][a-zA-Z0-9_]*
+
+GRAMMAR RULES (BNF):
+-------------------
+
+Program → FunctionList StmtList
+
+FunctionList → FunctionDecl FunctionList
+             | ε
+
+FunctionDecl → 'func' Type IDENTIFIER '(' ParamList ')' Block
+
+ParamList → Param ParamListTail
+          | ε
+
+ParamListTail → ',' Param ParamListTail
+              | ε
+
+Param → Type IDENTIFIER
+
+StmtList → Stmt StmtList
+         | ε
+
+Stmt → DeclStmt
+     | AssignStmt
+     | IfStmt
+     | LoopStmt
+     | ShowStmt
+     | TellStmt
+     | ReturnStmt
+     | Block
+
+Block → '{' StmtList '}'
+
+DeclStmt → Type IDENTIFIER ';'                    // Declaration without initialization
+         | Type IDENTIFIER '=' Expr ';'            // Declaration with initialization
+
+Type → 'int'
+     | 'float'
+     | 'char'
+     | 'void'
+
+AssignStmt → IDENTIFIER '=' Expr ';'
+
+IfStmt → 'if' '(' Condition ')' Block ElifList ElsePart
+
+ElifList → 'elif' '(' Condition ')' Block ElifList
+         | ε
+
+ElsePart → 'else' Block
+         | ε
+
+LoopStmt → 'loop' 'from' IDENTIFIER '=' Expr 'to' Expr 'step' Expr Block
+         | 'loop' 'from' IDENTIFIER '=' Expr 'to' Expr Block
+         | 'loop' 'from' IDENTIFIER 'to' Expr 'step' Expr Block
+         | 'loop' 'from' IDENTIFIER 'to' Expr Block
+         | 'loop' '(' Condition ')' Block
+
+ShowStmt → 'show' ExprList ';'
+
+ExprList → Expr ExprListTail
+
+ExprListTail → ',' Expr ExprListTail
+             | ε
+
+TellStmt → 'tell' IDENTIFIER ';'
+
+ReturnStmt → 'return' Expr ';'
+           | 'return' ';'
+
+Condition → Expr RelOp Expr
+          | Condition LogicOp Condition
+          | '!' Condition
+          | '(' Condition ')'
+
+Expr → Term ExprPrime
+
+ExprPrime → '+' Term ExprPrime
+          | '-' Term ExprPrime
+          | ε
+
+Term → Factor TermPrime
+
+TermPrime → '*' Factor TermPrime
+          | '/' Factor TermPrime
+          | '%' Factor TermPrime
+          | ε
+
+Factor → IDENTIFIER
+       | FunctionCall
+       | INTEGER_LITERAL
+       | FLOAT_LITERAL
+       | CHAR_LITERAL
+       | '(' Expr ')'
+       | '-' Factor
+
+FunctionCall → IDENTIFIER '(' ArgList ')'
+
+ArgList → Expr ArgListTail
+        | ε
+
+ArgListTail → ',' Expr ArgListTail
+            | ε
+
+RelOp → '==' | '!=' | '<' | '>' | '<=' | '>='
+
+LogicOp → '&&' | '||'
+
+================================================================================
+VARIABLE INITIALIZATION:
+-----------------------
+1. Variables can be declared without initialization: int x;
+2. Variables can be initialized later: x = 5;
+3. Using uninitialized variables causes compilation error
+4. Loop variables must be initialized before use in 'loop from i to n'
+
+INITIALIZATION RULES:
+- Declaration only: int x;           → x is uninitialized
+- Declaration + init: int x = 5;     → x is initialized
+- Later assignment: x = 10;          → x becomes initialized
+- Using uninitialized: show x;       → ERROR if x not initialized
+- Loop requirement: loop from i to n → i must be initialized before loop
+
+EXAMPLES:
+int x;              // Declared but not initialized
+x = 10;             // Now initialized
+show x;             // OK: shows 10
+
+int y;
+show y;             // ERROR: y not initialized
+
+int i;
+i = 0;
+loop from i to 5 {  // OK: i is initialized
+    show i;
+}
+
+int j;
+loop from j to 5 {  // ERROR: j not initialized
+    show j;
+}
+
+================================================================================
+SCOPE MANAGEMENT:
+----------------
+1. Block Scope: Each { } creates a new scope
+2. Variable Shadowing: Variables declared in inner scope shadow outer scope
+3. Variable Lifetime: Variables declared in a scope are destroyed on scope exit
+4. Variable Modification: Assignment to existing variable modifies outer scope
+5. Scope Hierarchy: Global → Function → Block → Nested Block
+
+SCOPE RULES:
+- Declaration (int x = 5;) in scope → creates NEW local variable
+- Assignment (x = 5;) in scope → modifies existing variable from outer scope
+- On scope exit: local variables removed, outer variables retain modifications
+
+EXAMPLE:
+int x = 10;        // Global scope
+{
+    x = 20;        // Modifies global x
+    int y = 30;    // Local to this block
+    {
+        int x = 40;  // Shadows global x
+        show x;      // Shows 40
+    }
+    show x;        // Shows 20 (global x was modified)
+    show y;        // Shows 30
+}
+show x;            // Shows 20
+// show y;         // ERROR: y not in scope
+
+================================================================================
+FUNCTION SEMANTICS:
+------------------
+1. Functions must be declared before use
+2. Function calls must match parameter count and types
+3. Return type must match function declaration
+4. Recursion is supported
+5. Functions have their own scope
+6. Parameters are passed by value
+7. Void functions do not return a value
+
+FUNCTION TYPES:
+- int/float/char functions: Must return a value of that type
+- void functions: Do not return a value (or use 'return;' without value)
+
+RETURN STATEMENT REQUIREMENTS:
+- Non-void functions (int, float, char) MUST have at least one return statement
+- Void functions may have 'return;' (without value) or no return statement
+- Return statement must match function's return type
+
+EXAMPLE FUNCTIONS:
+// Function with return value
+func int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+int result;
+result = factorial(5);
+show result;
+
+// Void function (no return value)
+func void showMessage(int x) {
+    show x;
+    show x + 1;
+}
+
+showMessage(10);  // Shows 10, 11
+
+SHOW STATEMENT EXAMPLES:
+// Show single value
+show x;
+
+// Show multiple values (comma-separated)
+show x, y, z;
+
+// Show expressions
+show x + y, x * 2, z - 5;
+
+TELL STATEMENT EXAMPLES:
+// Read input from user
+tell x;
+tell age;
+
+LOOP EXAMPLES:
+// Range-based loop (for-style)
+loop from i = 0 to 10 step 2 {
+    show i;  // Shows 0, 2, 4, 6, 8, 10
+}
+
+// Conditional loop (while-style)
+int x = 0;
+loop (x < 10) {
+    show x;
+    x = x + 1;  // Shows 0 to 9
+}
+
+================================================================================
+TYPE COERCION RULES:
+-------------------
+1. int + int → int
+2. float + float → float
+3. int + float → float (int promoted to float)
+4. float + int → float (int promoted to float)
+5. char in arithmetic → promoted to int
+6. Assignment: int = float → ERROR (narrowing not allowed)
+7. Assignment: float = int → OK (widening allowed)
+
+================================================================================
+OPERATOR PRECEDENCE (Highest to Lowest):
+----------------------------------------
+1. Unary: -, !
+2. Multiplicative: *, /, %
+3. Additive: +, -
+4. Relational: <, >, <=, >=
+5. Equality: ==, !=
+6. Logical AND: &&
+7. Logical OR: ||
+8. Assignment: =
+
+================================================================================

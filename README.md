@@ -3,7 +3,6 @@
 A full-featured educational compiler implementation that demonstrates **all six classical phases of compilation**, built entirely from scratch **without parser generators**.
 Ideal for academic projects, compiler design courses, and anyone learning how compilers work internally.
 
----
 
 ## 📋 **Features**
 
@@ -21,7 +20,6 @@ Ideal for academic projects, compiler design courses, and anyone learning how co
   * Logical: `&&`, `||`, `!`
 * **Nested Structures:** full support for nested blocks and scopes
 
----
 
 ## 🛠️ **Compiler Phases**
 

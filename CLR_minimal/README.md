@@ -1,5 +1,6 @@
 # CLR (Canonical LR / LR(1)) Parser Analysis
 
+
 This folder contains CLR (LR(1)) parser analysis using the same grammar as LR0_minimal and SLR1_minimal.
 
 ## Quick Result

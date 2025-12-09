@@ -1,5 +1,6 @@
 # LALR(1) Parser Analysis - Industry Standard
 
+
 This folder contains LALR(1) parser analysis using the same grammar. LALR(1) is the **industry standard** used in Yacc, Bison, and most parser generators.
 
 ## Quick Result
